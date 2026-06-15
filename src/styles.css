@@ -1,0 +1,212 @@
+:root {
+  --bar: #f3f2f1;
+  --bar-border: #e1dfdd;
+  --accent: #2b579a;
+  --accent-light: #eef3fb;
+  --text: #201f1e;
+  --muted: #605e5c;
+  --page-shadow: rgba(0, 0, 0, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: #faf9f8;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ---------- Title bar ---------- */
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px;
+  background: var(--accent);
+  color: #fff;
+}
+.titlebar .brand {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.titlebar .docname {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  font: inherit;
+  padding: 3px 8px;
+  border-radius: 4px;
+  width: 240px;
+}
+.titlebar .docname::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.titlebar .spacer {
+  flex: 1;
+}
+.titlebar .hint {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ---------- Ribbon ---------- */
+.ribbon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: var(--bar);
+  border-bottom: 1px solid var(--bar-border);
+}
+.group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px;
+  border-right: 1px solid var(--bar-border);
+}
+.group:last-child {
+  border-right: none;
+}
+
+button.tool,
+select.tool {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 4px;
+  padding: 5px 7px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+  min-width: 30px;
+  line-height: 1;
+}
+button.tool:hover,
+select.tool:hover {
+  background: #e6e6e6;
+  border-color: var(--bar-border);
+}
+button.tool.active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+button.tool.icon {
+  font-size: 15px;
+}
+select.tool {
+  cursor: pointer;
+}
+.font-select {
+  min-width: 130px;
+}
+.size-select {
+  min-width: 56px;
+}
+.style-select {
+  min-width: 110px;
+}
+label.color {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+label.color:hover {
+  background: #e6e6e6;
+}
+label.color input {
+  width: 24px;
+  height: 4px;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* ---------- Editing surface ---------- */
+.surface {
+  flex: 1;
+  overflow: auto;
+  padding: 28px 0 60px;
+  display: flex;
+  justify-content: center;
+}
+.page {
+  background: #fff;
+  width: 8.5in;
+  min-height: 11in;
+  padding: 1in;
+  box-shadow: 0 1px 8px var(--page-shadow);
+  outline: none;
+  font-family: Calibri, "Segoe UI", sans-serif;
+  font-size: 11pt;
+  line-height: 1.5;
+  color: #000;
+  transform-origin: top center;
+}
+.page:focus {
+  box-shadow: 0 1px 12px var(--page-shadow);
+}
+.page p {
+  margin: 0 0 8pt;
+}
+.page h1 {
+  font-size: 20pt;
+  font-weight: 600;
+  margin: 0 0 10pt;
+}
+.page h2 {
+  font-size: 16pt;
+  font-weight: 600;
+  margin: 0 0 8pt;
+}
+.page h3 {
+  font-size: 13pt;
+  font-weight: 600;
+  margin: 0 0 6pt;
+}
+
+/* ---------- Status bar ---------- */
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 4px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+}
+.statusbar .spacer {
+  flex: 1;
+}
+.statusbar select {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font: inherit;
+  padding: 2px 4px;
+}
+.hidden-input {
+  display: none;
+}
