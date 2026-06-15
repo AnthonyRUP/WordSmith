@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
@@ -12,14 +12,14 @@ import { HeadingNode, QuoteNode } from '@lexical/rich-text'
 import { ListNode, ListItemNode } from '@lexical/list'
 import { LinkNode, AutoLinkNode } from '@lexical/link'
 import { CodeNode } from '@lexical/code'
-import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html'
+import { $generateNodesFromDOM } from '@lexical/html'
 import { $getRoot } from 'lexical'
 
 import Toolbar from './Toolbar.jsx'
 import AutosavePlugin from './plugins/AutosavePlugin.jsx'
 import WordCountPlugin from './plugins/WordCountPlugin.jsx'
 import EditorRefPlugin from './plugins/EditorRefPlugin.jsx'
-import { docxToHtml, htmlToDocx, downloadHtml } from './docxIO.js'
+import { docxToHtml } from './docxIO.js'
 
 const STORAGE_KEY = 'wordsmith:doc'
 const NAME_KEY = 'wordsmith:name'
@@ -66,31 +66,6 @@ export default function App() {
     }
   }
 
-  const getHtml = useCallback(() => {
-    const editor = editorRef.current
-    if (!editor) return ''
-    let html = ''
-    editor.getEditorState().read(() => {
-      html = $generateHtmlFromNodes(editor, null)
-    })
-    return html
-  }, [])
-
-  const exportDocx = useCallback(() => htmlToDocx(getHtml(), docName), [getHtml, docName])
-  const exportHtml = useCallback(() => downloadHtml(getHtml(), docName), [getHtml, docName])
-
-  const printDoc = useCallback(() => {
-    const html = getHtml()
-    const w = window.open('', '_blank')
-    if (!w) return
-    w.document.write(`<!doctype html><html><head><title>${docName}</title>
-      <style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.5;margin:1in;}</style>
-      </head><body>${html}</body></html>`)
-    w.document.close()
-    w.focus()
-    w.print()
-  }, [getHtml, docName])
-
   return (
     <LexicalComposer initialConfig={editorConfig}>
       <div className="app">
@@ -106,12 +81,7 @@ export default function App() {
           <span className="hint">{saved ? 'All changes saved' : 'Saving…'}</span>
         </div>
 
-        <Toolbar
-          onOpen={openFile}
-          onExportDocx={exportDocx}
-          onExportHtml={exportHtml}
-          onPrint={printDoc}
-        />
+        <Toolbar docName={docName} onOpen={openFile} />
 
         <input ref={fileRef} type="file" accept=".docx" className="hidden-input" onChange={handleFile} />
 

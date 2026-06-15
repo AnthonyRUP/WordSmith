@@ -20,13 +20,37 @@ import { $setBlocksType, $patchStyleText } from '@lexical/selection'
 import { $createHeadingNode, $createQuoteNode, $isHeadingNode } from '@lexical/rich-text'
 import { $createCodeNode, $isCodeNode } from '@lexical/code'
 import { $getNearestNodeOfType } from '@lexical/utils'
+import { $generateHtmlFromNodes } from '@lexical/html'
+import { htmlToDocx, downloadHtml } from './docxIO.js'
 
 const FONTS = ['Calibri','Arial','Georgia','Times New Roman','Courier New','Verdana','Trebuchet MS','Comic Sans MS']
 const SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 24, 36]
 
-export default function Toolbar({ onOpen, onExportDocx, onExportHtml, onPrint }) {
+export default function Toolbar({ docName, onOpen }) {
   const [editor] = useLexicalComposerContext()
   const [active, setActive] = useState({})
+
+  const getHtml = useCallback(() => {
+    let html = ''
+    editor.read(() => {
+      html = $generateHtmlFromNodes(editor, null)
+    })
+    return html
+  }, [editor])
+
+  const exportDocx = useCallback(() => htmlToDocx(getHtml(), docName), [getHtml, docName])
+  const exportHtml = useCallback(() => downloadHtml(getHtml(), docName), [getHtml, docName])
+  const printDoc = useCallback(() => {
+    const html = getHtml()
+    const w = window.open('', '_blank')
+    if (!w) return
+    w.document.write(`<!doctype html><html><head><title>${docName}</title>
+      <style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.5;margin:1in;}</style>
+      </head><body>${html}</body></html>`)
+    w.document.close()
+    w.focus()
+    w.print()
+  }, [getHtml, docName])
 
   useEffect(() => {
     return editor.registerUpdateListener(({ editorState }) => {
@@ -153,9 +177,9 @@ export default function Toolbar({ onOpen, onExportDocx, onExportHtml, onPrint })
       <div className="group">
         <button className="tool" title="New" onMouseDown={apply('__new')}>New</button>
         <button className="tool" title="Open .docx" onMouseDown={(e) => { e.preventDefault(); onOpen() }}>Open</button>
-        <button className="tool" title="Save as .docx" onMouseDown={(e) => { e.preventDefault(); onExportDocx() }}>.docx</button>
-        <button className="tool" title="Save as HTML" onMouseDown={(e) => { e.preventDefault(); onExportHtml() }}>.html</button>
-        <button className="tool" title="Print / PDF" onMouseDown={(e) => { e.preventDefault(); onPrint() }}>Print</button>
+        <button className="tool" title="Save as .docx" onMouseDown={(e) => { e.preventDefault(); exportDocx() }}>.docx</button>
+        <button className="tool" title="Save as HTML" onMouseDown={(e) => { e.preventDefault(); exportHtml() }}>.html</button>
+        <button className="tool" title="Print / PDF" onMouseDown={(e) => { e.preventDefault(); printDoc() }}>Print</button>
       </div>
 
       <div className="group">

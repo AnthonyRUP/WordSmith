@@ -19,6 +19,7 @@
     "@lexical/rich-text": "^0.45.0",
     "@lexical/selection": "^0.45.0",
     "@lexical/utils": "^0.45.0",
+    "docx": "^9.7.1",
     "html-docx-js-typescript": "^0.1.5",
     "lexical": "^0.45.0",
     "mammoth": "^1.8.0",
